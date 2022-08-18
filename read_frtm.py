@@ -9,13 +9,24 @@ import numpy as np
 import csv
 import glob
 import os
+from collections import OrderedDict
 
 def get_results_files(path,var_name='time_var'):
 
-    index_file = glob.glob(path + '\\*.csv')[0]
     
+    index_file_full_path = glob.glob(path + '\\**\\*.csv',recursive=True)
+    if len(index_file_full_path)>1:
+        index_file_full_path = os.path.abspath(index_file_full_path[0])
+        print(f'WARNING: Multiple index files found, using {index_file_full_path}')
+    elif len(index_file_full_path)==1:
+        index_file_full_path = os.path.abspath(index_file_full_path[0])
+        print(f'INFO: Index file found, using {index_file_full_path}')
+    else:
+        print('ERROR: FRTM Index file not found, check path')
+        return
     
-    all_sol_files = glob.glob(path + '\\*.frtm')
+    base_path, index_filename = os.path.split(index_file_full_path)
+    all_sol_files = glob.glob(base_path + '\\*.frtm')
     path, file_name = os.path.split(all_sol_files[0])
     file_name_prefix = file_name.split("_DV")[0]
     
@@ -23,7 +34,7 @@ def get_results_files(path,var_name='time_var'):
     var_IDS = []
     var_name = 'time_var'
     var_vals = []
-    with open(index_file, mode='r') as csv_file:
+    with open(index_file_full_path, mode='r') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         line_count = 0
         for row in csv_reader:
@@ -44,12 +55,15 @@ def get_results_files(path,var_name='time_var'):
     variation_var_IDS = sorted(zip(var_vals,var_IDS))
 
     all_frtm =[]  
+    all_frtm_dict = {}
     for var_val, id_num in variation_var_IDS:
         #all_frtm[var_val]=f'{path}/{file_name_prefix}_DV{id_num}.frtm'
         all_frtm.append(f'{path}/{file_name_prefix}_DV{id_num}.frtm')
+        all_frtm_dict[var_val] = f'{path}/{file_name_prefix}_DV{id_num}.frtm'
         
-    print(f'Variations Founds: {len(all_frtm)}.')
-    return all_frtm
+    print(f'Variations Found: {len(all_frtm)}.')
+    all_frtm_dict = OrderedDict(sorted(all_frtm_dict.items()))
+    return all_frtm_dict
 
 class read_frtm(object):
     """

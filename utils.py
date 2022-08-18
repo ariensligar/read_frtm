@@ -10,9 +10,9 @@ import numpy as np
 import numpy.matlib as npm
 from numpy.fft import fft,fftshift,ifft,ifftshift,fft2
 import glob
-#from pyargus import directionEstimation as de
+from pyargus import directionEstimation as de
 import time as walltime
-#from skimage.feature import peak_local_max
+from skimage.feature import peak_local_max
 from copy import deepcopy
 
 def get_results_files(path,wildcard=''):

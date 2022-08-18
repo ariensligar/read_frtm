@@ -18,19 +18,19 @@ def get_script_path():
     return os.path.dirname(os.path.realpath(__file__))
 
 
+path = './example_frtm/'
+#path = './example_frtm/Intersection.aedtexport/design1/Setup1_ts_8_18_2022_8_51_42_AM/'
 
-path = './example_frtm/Setup1_ts_8_18_2022_8_51_42_AM/'
-
-show_rd = False
-show_ra =False
-show_peaks = False
+show_rd = True
+show_ra =True
+show_peaks = True
 ant_space = 0.73
 
-results_files = get_results_files(path)
-num_results = len(results_files)
+results_dict = get_results_files(path)
+num_results = len(results_dict)
 t_start = 0
 t_stop = 13
-t_sweep= np.linspace(t_start,t_stop,num=num_results)
+t_sweep= list(results_dict.keys())
 fps = 1/(t_sweep[1]-t_sweep[0])
 rPixels =256
 dPixels =256
@@ -40,8 +40,8 @@ azPixels = 256
 #assumes data is the same for all files in the directory
 all_results = []
 all_results_ra = []
-for t_idx in range(len(t_sweep)):
-    data= read_frtm(results_files[t_idx])
+for t_val in results_dict.keys():
+    data= read_frtm(results_dict[t_val])
     
     nfreq = data.nfreq
     fc = data.freq_center
