@@ -18,8 +18,8 @@ def get_script_path():
     return os.path.dirname(os.path.realpath(__file__))
 
 
-#path = 'D:\\applications\\Walking_Radar\\walking_person_radar2.aedtresults\RadarPos1.results\\'
-path = 'D:\\applications\\Walking_Radar\\AoA_Test.aedtexport\\Sphere_Only\\Full_Time_Sweep\\'
+
+path = './example_frtm/Setup1_ts_8_18_2022_8_51_42_AM/'
 
 show_rd = False
 show_ra =False
